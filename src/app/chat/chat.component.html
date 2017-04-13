@@ -1,0 +1,54 @@
+
+<div *ngIf="room; else joinForm" class="wrapper">
+
+  <!-- Room name -->
+  <div class="room-header">
+    <h2>{{ room }}</h2>
+    <button type="button" (click)="logout()">Logout</button>
+  </div>
+
+  <!-- Messages -->
+  <ul class="messages">
+    <li *ngFor="let chat of chats" class="message">
+      <div *ngIf="chat.type === 'message'">
+        <div class="message-header">
+          <span>{{ chat.username }}</span>
+          <span class="time" title="{{ chat.timestamp | date: 'medium' }}">
+            {{ chat.timestamp | date: 'shortTime' }}
+          </span>
+        </div>
+        <div class="message-body">{{ chat.text }}</div>
+      </div>
+      <div *ngIf="chat.type === 'meta'">
+        <div class="message-meta">{{ chat.username}} {{ chat.text }}</div>
+      </div>
+    </li>
+  </ul>
+
+  <!-- Message form  -->
+  <form class="message-form" (ngSubmit)="sendMessage(text)">
+    <input [(ngModel)]="text" type="text" class="text-input" name="message" />
+    <button [disabled]="!text.length">Send</button>
+  </form>
+</div>
+
+<!-- Join room form -->
+<ng-template #joinForm>
+  <div class="wrapper">
+    <div class="join-form">
+      <h1>Select Chat Room</h1>
+      <form (ngSubmit)="joinRoom()" #joinForm="ngForm">
+        <div class="form-title">Username</div>
+        <input type="text" [(ngModel)]="joinRoomForm.username" name="username" required="" />
+        <div class="form-title">Room</div>
+        <select [(ngModel)]="joinRoomForm.room" name="room" required="">
+          <option disabled>Select Room</option>
+          <option value="Javascript">Javascript</option>
+          <option value="Java">Java</option>
+          <option value="Python">Python</option>
+        </select>
+        <button type="submit" [disabled]="!joinForm.form.valid">Join</button>
+      </form>
+    </div>
+  </div>
+</ng-template>
